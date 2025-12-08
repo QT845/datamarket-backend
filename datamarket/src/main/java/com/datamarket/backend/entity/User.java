@@ -38,4 +38,7 @@ public class User {
 
     @Column(nullable = false)
     private boolean isEmailVerified = false;
+
+    @Column(nullable = false, name = "token_version")
+    private Integer tokenVersion = 0;
 }

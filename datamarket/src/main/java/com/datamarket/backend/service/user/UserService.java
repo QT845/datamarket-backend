@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface UserService {
     Optional<User> getUserByEmail(String email);
     Optional<User> getUserByUsername(String username);
+    Optional<User> getUserById(Long id);
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
     User saveUser(User user);
