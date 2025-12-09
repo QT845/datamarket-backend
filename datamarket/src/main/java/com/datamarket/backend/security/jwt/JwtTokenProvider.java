@@ -21,8 +21,7 @@ public class JwtTokenProvider {
 
     private Key getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
-        Key key = Keys.hmacShaKeyFor(keyBytes);
-        return key;
+        return Keys.hmacShaKeyFor(keyBytes);
     }
     public String generateAccessToken(Long userId, String role, Integer tokenVersion) {
         Date now = new Date();

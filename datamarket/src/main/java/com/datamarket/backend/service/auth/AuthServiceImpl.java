@@ -9,6 +9,8 @@ import com.datamarket.backend.entity.RefreshToken;
 import com.datamarket.backend.entity.User;
 import com.datamarket.backend.enums.RoleType;
 import com.datamarket.backend.enums.UserStatus;
+import com.datamarket.backend.exception.CustomException;
+import com.datamarket.backend.exception.ErrorCode;
 import com.datamarket.backend.security.jwt.JwtTokenProvider;
 import com.datamarket.backend.security.refresh.RefreshTokenService;
 import com.datamarket.backend.service.user.UserService;
@@ -35,31 +37,19 @@ public class AuthServiceImpl implements AuthService{
                 userService.getUserByUsername(loginInput);
 
         if(user.isEmpty()){
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Invalid username/email or password")
-                    .build();
+            throw new CustomException(ErrorCode.AUTH_001);
         }
 
         if(!passwordUtil.matches(request.getPassword(), user.get().getPassword())){
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Invalid username/email or password")
-                    .build();
+            throw new CustomException(ErrorCode.AUTH_001);
         }
 
         if (user.get().getStatus() == UserStatus.BANNED) {
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Your account has been banned")
-                    .build();
+            throw new CustomException(ErrorCode.AUTH_008);
         }
 
         if (user.get().getStatus() == UserStatus.INACTIVE) {
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Please verify your email before logging in")
-                    .build();
+            throw new CustomException(ErrorCode.AUTH_009);
         }
         String accessToken = jwtTokenProvider.generateAccessToken(user.get().getId(),
                 user.get().getRole().name(),
@@ -86,23 +76,14 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public ApiResponse<AuthResponse> register(RegisterRequest request) {
         if(userService.existsByUsername(request.getUserName())){
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Username is already taken")
-                    .build();
+            throw new CustomException(ErrorCode.USER_003);
         }
         if(userService.existsByEmail(request.getEmail())){
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Email is already in use")
-                    .build();
+            throw new CustomException(ErrorCode.USER_002);
         }
 
         if(!request.getPassword().equals(request.getConfirmPassword())) {
-            return ApiResponse.<AuthResponse>builder()
-                    .success(false)
-                    .message("Passwords do not match")
-                    .build();
+            throw new CustomException(ErrorCode.USER_009);
         }
 
         User user = User.builder()
@@ -134,22 +115,19 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public ApiResponse<TokenResponse> refreshToken(String refreshToken) {
-        TokenResponse token = refreshTokenService.refreshAccessToken(refreshToken);
-        String newRefreshToken = token.getRefreshToken();
-        String newAccessToken = token.getAccessToken();
+        TokenResponse tokenResponse = refreshTokenService.refreshAccessToken(refreshToken);
+
         return ApiResponse.<TokenResponse>builder()
                 .success(true)
                 .message("Token refreshed successfully")
-                .data(TokenResponse.builder()
-                        .accessToken(newAccessToken)
-                        .refreshToken(newRefreshToken)
-                        .build())
+                .data(tokenResponse)
                 .build();
     }
 
     @Override
     public ApiResponse<String> logout(String refreshToken) {
-        refreshTokenService.revokeToken(refreshToken);
+        refreshTokenService.deleteByToken(refreshToken);
+
         return ApiResponse.<String>builder()
                 .success(true)
                 .message("Logged out successfully")

@@ -8,8 +8,6 @@ public interface RefreshTokenService {
     RefreshToken createRefreshToken(User user);
     RefreshToken validateRefreshToken(String token);
     TokenResponse refreshAccessToken(String refreshToken);
-    RefreshToken rotateRefreshToken(RefreshToken oldToken);
-    void revokeAllTokensByUser(User user);
-    void revokeToken(String token);
+    void deleteByToken(String token);
     void cleanUpExpired();
 }
