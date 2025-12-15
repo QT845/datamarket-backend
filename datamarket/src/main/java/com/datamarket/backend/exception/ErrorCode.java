@@ -32,6 +32,7 @@ public enum ErrorCode {
     USER_006("USER_006", "Cannot update user", HttpStatus.BAD_REQUEST),
     USER_007("USER_007", "User is banned", HttpStatus.FORBIDDEN),
     USER_008("USER_008", "Passwords do not match", HttpStatus.BAD_REQUEST),
+
     ;
 
 
