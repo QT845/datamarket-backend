@@ -5,6 +5,7 @@ import com.datamarket.backend.dto.request.RegisterRequest;
 import com.datamarket.backend.dto.response.ApiResponse;
 import com.datamarket.backend.dto.response.AuthResponse;
 import com.datamarket.backend.dto.response.TokenResponse;
+import com.datamarket.backend.dto.response.UserResponse;
 import com.datamarket.backend.service.auth.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -97,6 +98,10 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getMe() {
+        return ResponseEntity.ok().body(authService.getMe());
+    }
     private String extractRefreshToken(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {

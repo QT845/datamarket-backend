@@ -8,6 +8,7 @@ import com.datamarket.backend.exception.CustomException;
 import com.datamarket.backend.exception.ErrorCode;
 import com.datamarket.backend.repository.RefreshTokenRepository;
 import com.datamarket.backend.security.jwt.JwtTokenProvider;
+import com.datamarket.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final TokenProvider refreshTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
 
     @Value("${refresh-token.expire-days}")
     private int refreshTokenExpireDays;
@@ -71,6 +73,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         RefreshToken newRefreshToken = createRefreshToken(user);
 
+        user.setTokenVersion(user.getTokenVersion() + 1);
+
+        userService.saveUser(user);
+
         String newAccessToken = jwtTokenProvider.generateAccessToken(
                 user.getId(),
                 user.getRole().toString(),
@@ -85,8 +91,16 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     @Override
     @Transactional
-    public void deleteByToken(String token) {
-        refreshTokenRepository.deleteByRefreshToken(token);
+    public void deleteByToken(String refreshToken) {
+        RefreshToken token = validateRefreshToken(refreshToken);
+
+        User user = token.getUser();
+
+        user.setTokenVersion(user.getTokenVersion() + 1);
+
+        userService.saveUser(user);
+
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
     }
 
     @Override

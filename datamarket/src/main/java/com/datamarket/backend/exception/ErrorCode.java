@@ -26,13 +26,13 @@ public enum ErrorCode {
     //    UserError
     USER_001("USER_001", "User not found", HttpStatus.NOT_FOUND),
     USER_002("USER_002", "Email already exists", HttpStatus.CONFLICT),
-    USER_003("USER_003", "Username already taken", HttpStatus.CONFLICT),
-    USER_004("USER_004", "User is inactive", HttpStatus.FORBIDDEN),
-    USER_005("USER_005", "Invalid user role", HttpStatus.BAD_REQUEST),
-    USER_006("USER_006", "Password incorrect", HttpStatus.BAD_REQUEST),
-    USER_007("USER_007", "Cannot update user", HttpStatus.BAD_REQUEST),
-    USER_008("USER_008", "User is banned", HttpStatus.FORBIDDEN),
-    USER_009("USER_009", "Passwords do not match", HttpStatus.BAD_REQUEST),
+    USER_003("USER_003", "User is inactive", HttpStatus.FORBIDDEN),
+    USER_004("USER_004", "Invalid user role", HttpStatus.BAD_REQUEST),
+    USER_005("USER_005", "Password incorrect", HttpStatus.BAD_REQUEST),
+    USER_006("USER_006", "Cannot update user", HttpStatus.BAD_REQUEST),
+    USER_007("USER_007", "User is banned", HttpStatus.FORBIDDEN),
+    USER_008("USER_008", "Passwords do not match", HttpStatus.BAD_REQUEST),
+
     ;
 
 

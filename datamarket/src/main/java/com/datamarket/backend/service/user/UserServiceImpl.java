@@ -16,9 +16,6 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserByEmail(String email) { return userRepository.findByEmail(email);
     }
 
-    @Override
-    public Optional<User> getUserByUsername(String username) { return userRepository.findByUsername(username);
-    }
 
     @Override
     public Optional<User> getUserById(Long id) { return userRepository.findById(id);
@@ -26,10 +23,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean existsByEmail(String email) { return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsByUsername(String username) { return userRepository.existsByUsername(username);
     }
 
     @Override
