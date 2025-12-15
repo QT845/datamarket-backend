@@ -5,6 +5,7 @@ import com.datamarket.backend.dto.request.RegisterRequest;
 import com.datamarket.backend.dto.response.ApiResponse;
 import com.datamarket.backend.dto.response.AuthResponse;
 import com.datamarket.backend.dto.response.TokenResponse;
+import com.datamarket.backend.dto.response.UserResponse;
 import com.datamarket.backend.service.auth.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,20 +28,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         ApiResponse<AuthResponse> result = authService.login(loginRequest);
-        if (!result.isSuccess() || result.getData() == null) {
-            return ResponseEntity.status(401).body(result);
-        }
+
         AuthResponse authResponse = result.getData();
+
         String refreshToken = authResponse.getRefreshToken();
-        ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
-                .httpOnly(true)
-                .secure(false)
-                .path("/api/auth")
-                .maxAge(3 * 24 * 60 * 60) // 3 days
-                .sameSite("Lax")
-                .build();
-        response.addHeader("Set-Cookie", cookie.toString());
+
+        setRefreshCookie(response, refreshToken);
+
         authResponse.setRefreshToken(null);
+
         return ResponseEntity.ok().body(result);
     }
 
@@ -54,17 +50,15 @@ public class AuthController {
         String refreshToken = extractRefreshToken(request);
         if (refreshToken != null) {
             ApiResponse<TokenResponse> result =  authService.refreshToken(refreshToken);
+
             TokenResponse tokenResponse = result.getData();
+
             String newRefreshToken = tokenResponse.getRefreshToken();
-            ResponseCookie cookie = ResponseCookie.from("refresh_token", newRefreshToken)
-                    .httpOnly(true)
-                    .secure(false)
-                    .path("/api/auth")
-                    .maxAge(3 * 24 * 60 * 60) // 3 days
-                    .sameSite("Lax")
-                    .build();
-            response.addHeader("Set-Cookie", cookie.toString());
+
+            setRefreshCookie(response, newRefreshToken);
+
             tokenResponse.setRefreshToken(null);
+
             return ResponseEntity.ok().body(result);
         } else {
             return ResponseEntity.status(401).body(ApiResponse.<TokenResponse>builder()
@@ -78,8 +72,10 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractRefreshToken(request);
+
         if (refreshToken != null) {
             authService.logout(refreshToken);
+
             ResponseCookie deleteCookie = ResponseCookie.from("refresh_token", "")
                     .httpOnly(true)
                     .secure(false)
@@ -87,7 +83,9 @@ public class AuthController {
                     .maxAge(0)
                     .sameSite("Lax")
                     .build();
+
             response.addHeader("Set-Cookie", deleteCookie.toString());
+
             return ResponseEntity.ok().body(ApiResponse.<String>builder()
                     .success(true)
                     .message("Logged out successfully")
@@ -100,6 +98,10 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getMe() {
+        return ResponseEntity.ok().body(authService.getMe());
+    }
     private String extractRefreshToken(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -110,6 +112,18 @@ public class AuthController {
             }
         }
         return null;
+    }
+
+    private void setRefreshCookie(HttpServletResponse response, String token) {
+        ResponseCookie cookie = ResponseCookie.from("refresh_token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/api/auth")
+                .maxAge(3 * 24 * 60 * 60)
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
     }
 
 }
