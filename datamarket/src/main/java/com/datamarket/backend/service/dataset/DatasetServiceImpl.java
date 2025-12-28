@@ -27,7 +27,6 @@ public class DatasetServiceImpl implements DatasetService {
                 .description(request.getDescription())
                 .domain(datasetDomainService.findById(request.getDomainId()))
                 .status(DatasetStatus.DRAFT)
-                .createdAt(LocalDateTime.now())
                 .currentVersion(null)
                 .build();
         datasetRepository.save(dataset);
@@ -89,5 +88,10 @@ public class DatasetServiceImpl implements DatasetService {
     @Override
     public void switchCurrentVersion(Long datasetId, Long versionId) {
 
+    }
+
+    @Override
+    public Dataset findById(Long id) {
+        return datasetRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.DATASET_001));
     }
 }

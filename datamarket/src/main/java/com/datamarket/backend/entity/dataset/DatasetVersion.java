@@ -39,6 +39,12 @@ public class DatasetVersion {
     @Column(nullable = false, length = 100)
     private String dataLocation;
 
+    @Column(nullable = false, length = 255)
+    private String checksum;
+
+    @Column(nullable = false, length = 255)
+    private String originFileName;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

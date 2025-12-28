@@ -17,6 +17,11 @@ public enum ErrorCode {
     COMMON_012("COMMON_012", "Field value is invalid", HttpStatus.BAD_REQUEST),
     COMMON_013("COMMON_013", "Field value is blank", HttpStatus.BAD_REQUEST),
     COMMON_014("COMMON_014", "Field length is invalid", HttpStatus.BAD_REQUEST),
+    COMMON_015("COMMON_015", "File is empty", HttpStatus.BAD_REQUEST),
+    COMMON_016("COMMON_016", "File read failed", HttpStatus.BAD_REQUEST),
+    COMMON_017("COMMON_017", "File save failed", HttpStatus.BAD_REQUEST),
+
+
 
 
     //    AuthError
@@ -53,6 +58,8 @@ public enum ErrorCode {
     DATASET_003("DATASET_003", "Dataset is not editable", HttpStatus.BAD_REQUEST),
     DATASET_004("DATASET_004", "Dataset is not in draft status", HttpStatus.BAD_REQUEST),
     DATASET_005("DATASET_005", "Dataset is not approved", HttpStatus.BAD_REQUEST),
+    DATASET_006("DATASET_006", "Dataset does not allow uploading version", HttpStatus.BAD_REQUEST),
+
     DATASET_010("DATASET_010", "Dataset domain not found", HttpStatus.NOT_FOUND),
     DATASET_011("DATASET_011", "Dataset domain is inactive", HttpStatus.BAD_REQUEST),
     DATASET_012("DATASET_012", "Dataset type is not allowed for this domain", HttpStatus.BAD_REQUEST),

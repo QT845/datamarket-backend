@@ -2,7 +2,9 @@ package com.datamarket.backend.enums;
 
 public enum DatasetVersionStatus {
     CREATED,
-    VALIDATED,
+    VALIDATING,
+    REJECTED_SYS,
+    PENDING_REVIEW,
     APPROVED,
-    REJECTED
+    REJECTED_MOD
 }

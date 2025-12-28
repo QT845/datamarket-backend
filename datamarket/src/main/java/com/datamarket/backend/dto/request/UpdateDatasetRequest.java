@@ -1,6 +1,5 @@
 package com.datamarket.backend.dto.request;
 
-import com.datamarket.backend.enums.DatasetType;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
