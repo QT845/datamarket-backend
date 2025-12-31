@@ -39,7 +39,7 @@ public class StorageServiceImpl implements StorageService{
     @Override
     public byte[] read(String objectKey) throws IOException {
         try {
-            Path fullPath = Paths.get(basePath + objectKey);
+            Path fullPath = Paths.get(basePath, objectKey);
             return Files.readAllBytes(fullPath);
         } catch (IOException e) {
             throw new RuntimeException("Failed to read file",e);
@@ -49,7 +49,7 @@ public class StorageServiceImpl implements StorageService{
     @Override
     public void delete(String objectKey) throws IOException {
         try {
-            Path fullPath = Paths.get(basePath + objectKey);
+            Path fullPath = Paths.get(basePath, objectKey);
             Files.deleteIfExists(fullPath);
         } catch (IOException e) {
             throw new RuntimeException("Failed to delete file",e);

@@ -25,7 +25,7 @@ public class DatasetServiceImpl implements DatasetService {
         Dataset dataset = Dataset.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-                .domain(datasetDomainService.findById(request.getDomainId()))
+//                .domain(datasetDomainService.findById(request.getDomainId()))
                 .status(DatasetStatus.DRAFT)
                 .currentVersion(null)
                 .build();
@@ -36,7 +36,7 @@ public class DatasetServiceImpl implements DatasetService {
                 .name(dataset.getName())
                 .description(dataset.getDescription())
                 .datasetStatus(dataset.getStatus())
-                .domain(dataset.getDomain().getName())
+//                .domain(dataset.getDomain().getName())
                 .currentVersion(null)
                 .createdAt(dataset.getCreatedAt())
                 .build();
@@ -55,7 +55,7 @@ public class DatasetServiceImpl implements DatasetService {
                 .name(dataset.getName())
                 .description(dataset.getDescription())
                 .datasetStatus(dataset.getStatus())
-                .domain(dataset.getDomain().getName())
+//                .domain(dataset.getDomain().getName())
                 .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
                 .createdAt(dataset.getCreatedAt())
                 .build();
@@ -71,7 +71,7 @@ public class DatasetServiceImpl implements DatasetService {
                 .name(dataset.getName())
                 .description(dataset.getDescription())
                 .datasetStatus(dataset.getStatus())
-                .domain(dataset.getDomain().getName())
+//                .domain(dataset.getDomain().getName())
                 .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
                 .createdAt(dataset.getCreatedAt())
                 .build();
@@ -93,5 +93,10 @@ public class DatasetServiceImpl implements DatasetService {
     @Override
     public Dataset findById(Long id) {
         return datasetRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.DATASET_001));
+    }
+
+    @Override
+    public Dataset save(Dataset dataset) {
+        return datasetRepository.save(dataset);
     }
 }

@@ -69,6 +69,7 @@ public enum ErrorCode {
     DATASET_023("DATASET_023", "Dataset version is not pending review", HttpStatus.BAD_REQUEST),
     DATASET_024("DATASET_024", "Dataset version is already approved", HttpStatus.CONFLICT),
     DATASET_025("DATASET_025", "Dataset version is already rejected", HttpStatus.CONFLICT),
+    DATASET_026("DATASET_026", "Dataset version is not created", HttpStatus.CONFLICT),
     DATASET_030("DATASET_030", "Dataset upload failed", HttpStatus.BAD_REQUEST),
     DATASET_031("DATASET_031", "Dataset format is invalid", HttpStatus.BAD_REQUEST),
     DATASET_032("DATASET_032", "Dataset validation failed", HttpStatus.BAD_REQUEST),
@@ -76,6 +77,7 @@ public enum ErrorCode {
     DATASET_040("DATASET_040", "Dataset version approval failed", HttpStatus.BAD_REQUEST),
     DATASET_041("DATASET_041", "Dataset version rejected by moderator", HttpStatus.BAD_REQUEST),
     DATASET_042("DATASET_042", "Moderator is not allowed to review dataset", HttpStatus.FORBIDDEN),
+    DATASET_043("DATASET_043", "Dataset Report not found", HttpStatus.FORBIDDEN),
     DATASET_050("DATASET_050", "User is not dataset owner", HttpStatus.FORBIDDEN),
     DATASET_051("DATASET_051", "User is not allowed to upload dataset", HttpStatus.FORBIDDEN),
 

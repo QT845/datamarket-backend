@@ -29,8 +29,7 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
     public VersionResponse createDatasetVersion(Long datasetId, MultipartFile file) {
         Dataset dataset = datasetService.findById(datasetId);
         if(dataset.getStatus().equals(DatasetStatus.DELETED)
-        || dataset.getStatus().equals(DatasetStatus.DRAFT)
-        || dataset.getStatus().equals(DatasetStatus.REJECTED)) {
+        || !dataset.getStatus().equals(DatasetStatus.DRAFT)) {
             throw new CustomException(ErrorCode.DATASET_006);
         }
 
@@ -53,13 +52,14 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
                 .status(DatasetVersionStatus.CREATED)
                 .generationType(DatasetGenerationType.PROVIDER)
                 .originFileName(fileName)
+                .dataLocation("")
                 .checksum(checksum)
                 .build();
         datasetVersionRepository.save(datasetVersion);
 
         String objectKey = "datasets/" + dataset.getId()
                 + "/" + datasetVersion.getId()
-                + "/raw";
+                + "/raw.csv";
         try {
             datasetVersion.setDataLocation(storageService.save(file, objectKey));
 
@@ -79,5 +79,15 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
                 .originFileName(datasetVersion.getOriginFileName())
                 .createdAt(datasetVersion.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    public DatasetVersion findById(Long versionId) {
+        return datasetVersionRepository.findById(versionId).orElseThrow(() -> new CustomException(ErrorCode.DATASET_020));
+    }
+
+    @Override
+    public DatasetVersion save(DatasetVersion datasetVersion) {
+        return datasetVersionRepository.save(datasetVersion);
     }
 }

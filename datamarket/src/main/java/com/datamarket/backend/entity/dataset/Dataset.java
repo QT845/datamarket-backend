@@ -34,9 +34,9 @@ public class Dataset {
     @Enumerated(EnumType.STRING)
     private DatasetStatus status = DatasetStatus.DRAFT;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "domain_id", nullable = false)
-    private DatasetDomain domain;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "domain_id", nullable = false)
+//    private DatasetDomain domain;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_version_id")

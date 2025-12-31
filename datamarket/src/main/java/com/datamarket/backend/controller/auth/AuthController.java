@@ -1,4 +1,4 @@
-package com.datamarket.backend.controller;
+package com.datamarket.backend.controller.auth;
 
 import com.datamarket.backend.dto.request.LoginRequest;
 import com.datamarket.backend.dto.request.RegisterRequest;

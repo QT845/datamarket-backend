@@ -12,4 +12,5 @@ public interface DatasetService {
     void archiveDataset(Long datasetId);
     void switchCurrentVersion(Long datasetId, Long versionId);
     Dataset findById(Long id);
+    Dataset save(Dataset dataset);
 }

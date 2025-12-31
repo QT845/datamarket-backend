@@ -4,6 +4,5 @@ public enum DatasetStatus {
     DRAFT,
     PENDING,
     APPROVED,
-    REJECTED,
     DELETED
 }
