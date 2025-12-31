@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/provider/**").permitAll()
                         .requestMatchers("/api/moderator/**").permitAll()
                         .requestMatchers("/api/admin/**").permitAll()
+                        .requestMatchers("/api/system/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
@@ -53,9 +54,9 @@ public class SecurityConfig {
                             res.setStatus(403);
                             res.getWriter().write("Forbidden");
                         })
-                )
+                );
 
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
         return http.build();
