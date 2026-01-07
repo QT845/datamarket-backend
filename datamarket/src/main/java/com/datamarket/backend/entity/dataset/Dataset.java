@@ -1,5 +1,6 @@
 package com.datamarket.backend.entity.dataset;
 
+import com.datamarket.backend.entity.Provider;
 import com.datamarket.backend.enums.DatasetStatus;
 import com.datamarket.backend.enums.DatasetType;
 import jakarta.persistence.*;
@@ -41,6 +42,10 @@ public class Dataset {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_version_id")
     private DatasetVersion currentVersion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "provider_id", nullable = false)
+    private Provider provider;
 
     @PrePersist
     public void prePersist() {

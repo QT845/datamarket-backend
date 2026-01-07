@@ -29,13 +29,27 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/domains/**").permitAll()
+
+
+                        // PUBLIC
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/provider/**").permitAll()
-                        .requestMatchers("/api/moderator/**").permitAll()
-                        .requestMatchers("/api/admin/**").permitAll()
-                        .requestMatchers("/api/system/**").permitAll()
+
+                        // PROVIDER
+                        .requestMatchers("/api/provider/**").hasRole("PROVIDER")
+
+                        // MODERATOR
+                        .requestMatchers("/api/moderator/**").hasRole("MODERATOR")
+
+                        // SYSTEM / ADMIN
+                        .requestMatchers("/api/system/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // OTHERS
                         .anyRequest().authenticated()
                 )
+
 
 
                 .formLogin(form -> form.disable())
@@ -54,9 +68,9 @@ public class SecurityConfig {
                             res.setStatus(403);
                             res.getWriter().write("Forbidden");
                         })
-                );
+                )
 
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
         return http.build();
