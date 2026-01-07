@@ -4,5 +4,7 @@ public enum DatasetStatus {
     DRAFT,
     PENDING,
     APPROVED,
-    DELETED
+    DELETED,
+    ARCHIVED_BY_PROVIDER,
+    REMOVED_BY_MOD
 }

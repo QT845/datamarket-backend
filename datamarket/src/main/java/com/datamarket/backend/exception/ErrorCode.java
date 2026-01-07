@@ -34,6 +34,7 @@ public enum ErrorCode {
     AUTH_007("AUTH_007", "Refresh token invalid", HttpStatus.UNAUTHORIZED),
     AUTH_008("AUTH_008", "Account is locked", HttpStatus.FORBIDDEN),
     AUTH_009("AUTH_009", "Email not verified", HttpStatus.BAD_REQUEST),
+    AUTH_011("AUTH_011", "You are not permission to access", HttpStatus.BAD_REQUEST),
 
     //    UserError
     USER_001("USER_001", "User not found", HttpStatus.NOT_FOUND),
@@ -44,6 +45,13 @@ public enum ErrorCode {
     USER_006("USER_006", "Cannot update user", HttpStatus.BAD_REQUEST),
     USER_007("USER_007", "User is banned", HttpStatus.FORBIDDEN),
     USER_008("USER_008", "Passwords do not match", HttpStatus.BAD_REQUEST),
+
+    //   ProviderError
+    PROVIDER_001("PROVIDER_001", "Provider not found", HttpStatus.NOT_FOUND),
+    PROVIDER_002("PROVIDER_002", "Provider already exists", HttpStatus.CONFLICT),
+    PROVIDER_003("PROVIDER_003", "Provider is not approved", HttpStatus.FORBIDDEN),
+    PROVIDER_004("PROVIDER_004", "Cannot update provider", HttpStatus.BAD_REQUEST),
+
 
     // DatasetError
     // Dataset - General (001–009)
@@ -59,17 +67,21 @@ public enum ErrorCode {
     DATASET_004("DATASET_004", "Dataset is not in draft status", HttpStatus.BAD_REQUEST),
     DATASET_005("DATASET_005", "Dataset is not approved", HttpStatus.BAD_REQUEST),
     DATASET_006("DATASET_006", "Dataset does not allow uploading version", HttpStatus.BAD_REQUEST),
+    DATASET_007("DATASET_007", "Dataset ownership is invalid", HttpStatus.FORBIDDEN),
 
     DATASET_010("DATASET_010", "Dataset domain not found", HttpStatus.NOT_FOUND),
     DATASET_011("DATASET_011", "Dataset domain is inactive", HttpStatus.BAD_REQUEST),
     DATASET_012("DATASET_012", "Dataset type is not allowed for this domain", HttpStatus.BAD_REQUEST),
     DATASET_020("DATASET_020", "Dataset version not found", HttpStatus.NOT_FOUND),
     DATASET_021("DATASET_021", "Dataset version already exists", HttpStatus.CONFLICT),
-    DATASET_022("DATASET_022", "Dataset version is not in valid state", HttpStatus.BAD_REQUEST),
+    DATASET_022("DATASET_022", "Duplicated file", HttpStatus.BAD_REQUEST),
     DATASET_023("DATASET_023", "Dataset version is not pending review", HttpStatus.BAD_REQUEST),
     DATASET_024("DATASET_024", "Dataset version is already approved", HttpStatus.CONFLICT),
     DATASET_025("DATASET_025", "Dataset version is already rejected", HttpStatus.CONFLICT),
     DATASET_026("DATASET_026", "Dataset version is not created", HttpStatus.CONFLICT),
+    DATASET_027("DATASET_027", "Dataset version checksum mismatch", HttpStatus.BAD_REQUEST),
+    DATASET_028("DATASET_028", "Dataset version does not belong to dataset", HttpStatus.BAD_REQUEST),
+    DATASET_029("DATASET_029", "Dataset version not approved", HttpStatus.BAD_REQUEST),
     DATASET_030("DATASET_030", "Dataset upload failed", HttpStatus.BAD_REQUEST),
     DATASET_031("DATASET_031", "Dataset format is invalid", HttpStatus.BAD_REQUEST),
     DATASET_032("DATASET_032", "Dataset validation failed", HttpStatus.BAD_REQUEST),
