@@ -2,7 +2,6 @@ package com.datamarket.backend.entity.dataset;
 
 import com.datamarket.backend.entity.Provider;
 import com.datamarket.backend.enums.DatasetStatus;
-import com.datamarket.backend.enums.DatasetType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table
@@ -35,9 +33,9 @@ public class Dataset {
     @Enumerated(EnumType.STRING)
     private DatasetStatus status = DatasetStatus.DRAFT;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "domain_id", nullable = false)
-//    private DatasetDomain domain;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "domain_id", nullable = false)
+    private DatasetDomain domain;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "current_version_id")

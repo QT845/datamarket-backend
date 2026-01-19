@@ -1,6 +1,6 @@
 package com.datamarket.backend.enums;
 
-public enum DatasetType {
+public enum DatasetLevel {
     RAW,
     ANALYTICS,
     AGGREGATED

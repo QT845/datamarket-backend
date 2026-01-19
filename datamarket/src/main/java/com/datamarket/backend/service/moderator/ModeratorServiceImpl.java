@@ -26,7 +26,7 @@ public class ModeratorServiceImpl implements ModeratorService{
         DatasetVersion version = datasetVersionService.findById(versionId);
         Dataset dataset = version.getDataset();
 
-        if(!version.getStatus().equals(DatasetVersionStatus.PENDING_REVIEW)){
+        if(!version.getStatus().equals(DatasetVersionStatus.TECHNICAL_REVIEW)){
             throw new CustomException(ErrorCode.DATASET_023);
         }
 
@@ -54,7 +54,7 @@ public class ModeratorServiceImpl implements ModeratorService{
         DatasetVersion version = datasetVersionService.findById(versionId);
         Dataset dataset = version.getDataset();
 
-        if(!version.getStatus().equals(DatasetVersionStatus.PENDING_REVIEW)){
+        if(!version.getStatus().equals(DatasetVersionStatus.TECHNICAL_REVIEW)){
             throw new CustomException(ErrorCode.DATASET_023);
         }
 

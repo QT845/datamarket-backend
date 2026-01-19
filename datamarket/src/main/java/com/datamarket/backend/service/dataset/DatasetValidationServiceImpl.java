@@ -98,7 +98,7 @@ public class DatasetValidationServiceImpl implements DatasetValidationService{
 
         ValidationStatus status = ValidationStatus.PASSED;
         if(passed) {
-            datasetVersion.setStatus(DatasetVersionStatus.PENDING_REVIEW);
+            datasetVersion.setStatus(DatasetVersionStatus.TECHNICAL_REVIEW);
 
         } else {
             status = ValidationStatus.FAILED;
@@ -136,7 +136,7 @@ public class DatasetValidationServiceImpl implements DatasetValidationService{
 
     @Override
     public List<DatasetQualityReportResponse> getAll() {
-        List<DatasetQualityReport> reports = datasetQualityReportRepository.findByDatasetVersion_Status(DatasetVersionStatus.PENDING_REVIEW);
+        List<DatasetQualityReport> reports = datasetQualityReportRepository.findByDatasetVersion_Status(DatasetVersionStatus.TECHNICAL_REVIEW);
 
         return reports.stream()
                 .map(report -> DatasetQualityReportResponse.builder()

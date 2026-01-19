@@ -27,7 +27,7 @@ public class DatasetServiceImpl implements DatasetService {
     private final DatasetVersionService datasetVersionService;
 
     @Override
-    public DatasetResponse createDataset(CreateDatasetRequest request) {
+    public Dataset createDataset(CreateDatasetRequest request) {
         User user = SecurityUtil.getCurrentUser();
         Provider provider = providerService.findById(user.getId());
         if(!provider.getStatus().equals(ProviderStatus.APPROVED)) {
@@ -37,22 +37,14 @@ public class DatasetServiceImpl implements DatasetService {
         Dataset dataset = Dataset.builder()
                 .name(request.getName())
                 .description(request.getDescription())
-//                .domain(datasetDomainService.findById(request.getDomainId()))
+                .domain(datasetDomainService.findById(request.getDomainId()))
                 .status(DatasetStatus.DRAFT)
                 .provider(provider)
                 .currentVersion(null)
                 .build();
         datasetRepository.save(dataset);
 
-        return DatasetResponse.builder()
-                .id(dataset.getId())
-                .name(dataset.getName())
-                .description(dataset.getDescription())
-                .datasetStatus(dataset.getStatus())
-//                .domain(dataset.getDomain().getName())
-                .currentVersion(null)
-                .createdAt(dataset.getCreatedAt())
-                .build();
+        return dataset;
     }
 
     @Override
@@ -78,7 +70,7 @@ public class DatasetServiceImpl implements DatasetService {
                 .name(dataset.getName())
                 .description(dataset.getDescription())
                 .datasetStatus(dataset.getStatus())
-//                .domain(dataset.getDomain().getName())
+                .domain(dataset.getDomain().getName())
                 .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
                 .createdAt(dataset.getCreatedAt())
                 .build();
@@ -94,7 +86,7 @@ public class DatasetServiceImpl implements DatasetService {
                 .name(dataset.getName())
                 .description(dataset.getDescription())
                 .datasetStatus(dataset.getStatus())
-//                .domain(dataset.getDomain().getName())
+                .domain(dataset.getDomain().getName())
                 .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
                 .createdAt(dataset.getCreatedAt())
                 .build();
