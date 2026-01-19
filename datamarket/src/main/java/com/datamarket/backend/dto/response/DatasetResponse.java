@@ -1,7 +1,6 @@
 package com.datamarket.backend.dto.response;
 
 import com.datamarket.backend.enums.DatasetStatus;
-import com.datamarket.backend.enums.DatasetType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

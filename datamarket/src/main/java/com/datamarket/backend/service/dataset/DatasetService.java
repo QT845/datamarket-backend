@@ -6,7 +6,7 @@ import com.datamarket.backend.dto.response.DatasetResponse;
 import com.datamarket.backend.entity.dataset.Dataset;
 
 public interface DatasetService {
-    DatasetResponse createDataset(CreateDatasetRequest request);
+    Dataset createDataset(CreateDatasetRequest request);
     DatasetResponse updateDataset(Long datasetId, UpdateDatasetRequest request);
     DatasetResponse getDataset(Long datasetId);
     void archiveDataset(Long datasetId);

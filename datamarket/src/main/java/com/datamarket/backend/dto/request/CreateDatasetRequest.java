@@ -1,6 +1,5 @@
 package com.datamarket.backend.dto.request;
 
-import com.datamarket.backend.enums.DatasetType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
