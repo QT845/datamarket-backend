@@ -30,51 +30,41 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordUtil passwordUtil;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
-    private final UserMapper userMapper;
 
     @Override
-    public ApiResponse<AuthResponse> login(LoginRequest request) {
-        Optional<User> user = userService.getUserByEmail(request.getEmail());
+    public AuthResponse login(LoginRequest request) {
+        User user = userService.getUserByEmail(request.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.AUTH_001));
 
-        if(user.isEmpty()){
+        if(!passwordUtil.matches(request.getPassword(), user.getPassword())){
             throw new CustomException(ErrorCode.AUTH_001);
         }
 
-        if(!passwordUtil.matches(request.getPassword(), user.get().getPassword())){
-            throw new CustomException(ErrorCode.AUTH_001);
-        }
-
-        if (user.get().getStatus() == UserStatus.BANNED) {
+        if (user.getStatus() == UserStatus.BANNED) {
             throw new CustomException(ErrorCode.AUTH_008);
         }
 
-        if (user.get().getStatus() == UserStatus.INACTIVE) {
+        if (user.getStatus() == UserStatus.INACTIVE) {
             throw new CustomException(ErrorCode.AUTH_009);
         }
-        String accessToken = jwtTokenProvider.generateAccessToken(user.get().getId(),
-                user.get().getRole().name(),
-                user.get().getTokenVersion());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),
+                user.getRole().name(),
+                user.getTokenVersion());
 
-        RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user.get());
+        RefreshToken refreshTokenEntity = refreshTokenService.createRefreshToken(user);
         String refreshToken = refreshTokenEntity.getRefreshToken();
 
-        AuthResponse authResponse = AuthResponse.builder()
-                .fullName(user.get().getFullName())
-                .email(user.get().getEmail())
-                .role(user.get().getRole().name())
+        return AuthResponse.builder()
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .build();
-
-        return ApiResponse.<AuthResponse>builder()
-                .success(true)
-                .message("Login successful")
-                .data(authResponse)
                 .build();
     }
 
     @Override
-    public ApiResponse<AuthResponse> register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if(userService.existsByEmail(request.getEmail())){
             throw new CustomException(ErrorCode.USER_002);
         }
@@ -95,30 +85,18 @@ public class AuthServiceImpl implements AuthService{
 
         userService.saveUser(user);
 
-        AuthResponse response = AuthResponse.builder()
+        return AuthResponse.builder()
                 .fullName(user.getFullName())
                 .email(user.getEmail())
                 .role(user.getRole().name())
                 .accessToken(null)
                 .refreshToken(null)
                 .build();
-
-        return ApiResponse.<AuthResponse>builder()
-                .success(true)
-                .message("Registration successful")
-                .data(response)
-                .build();
     }
 
     @Override
-    public ApiResponse<TokenResponse> refreshToken(String refreshToken) {
-        TokenResponse tokenResponse = refreshTokenService.refreshAccessToken(refreshToken);
-
-        return ApiResponse.<TokenResponse>builder()
-                .success(true)
-                .message("Token refreshed successfully")
-                .data(tokenResponse)
-                .build();
+    public TokenResponse refreshToken(String refreshToken) {
+        return refreshTokenService.refreshAccessToken(refreshToken);
     }
 
     @Override
@@ -133,13 +111,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public ApiResponse<UserResponse> getMe() {
-        User currentUser = SecurityUtil.getCurrentUser();
-
-        return ApiResponse.<UserResponse>builder()
-                .success(true)
-                .message("Get current user successfully")
-                .data(userMapper.toUserResponse(currentUser))
-                .build();
+    public User getMe() {
+        return SecurityUtil.getCurrentUser();
     }
 }

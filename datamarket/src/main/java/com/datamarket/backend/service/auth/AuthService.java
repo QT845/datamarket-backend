@@ -6,11 +6,12 @@ import com.datamarket.backend.dto.response.ApiResponse;
 import com.datamarket.backend.dto.response.AuthResponse;
 import com.datamarket.backend.dto.response.TokenResponse;
 import com.datamarket.backend.dto.response.UserResponse;
+import com.datamarket.backend.entity.User;
 
 public interface AuthService {
-    ApiResponse<AuthResponse> login(LoginRequest request);
-    ApiResponse<AuthResponse> register(RegisterRequest request);
-    ApiResponse<TokenResponse> refreshToken(String refreshToken);
+    AuthResponse login(LoginRequest request);
+    AuthResponse register(RegisterRequest request);
+    TokenResponse refreshToken(String refreshToken);
     void logout(String refreshToken);
-    ApiResponse<UserResponse> getMe();
+    User getMe();
 }
