@@ -1,6 +1,6 @@
 package com.datamarket.backend.security.refresh;
 
-import com.datamarket.backend.dto.response.TokenResponse;
+import com.datamarket.backend.dto.response.authResponse.TokenResponse;
 import com.datamarket.backend.entity.RefreshToken;
 import com.datamarket.backend.entity.User;
 import com.datamarket.backend.enums.UserStatus;

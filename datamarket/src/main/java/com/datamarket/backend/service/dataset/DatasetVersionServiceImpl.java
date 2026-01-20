@@ -1,6 +1,6 @@
 package com.datamarket.backend.service.dataset;
 
-import com.datamarket.backend.dto.response.VersionResponse;
+import com.datamarket.backend.dto.response.datasetResponse.VersionResponse;
 import com.datamarket.backend.entity.Provider;
 import com.datamarket.backend.entity.User;
 import com.datamarket.backend.entity.dataset.Dataset;
@@ -31,7 +31,7 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
     private final DatasetRepository datasetRepository;
 
     @Override
-    public VersionResponse createDatasetVersion(Long datasetId, MultipartFile file) {
+    public DatasetVersion createDatasetVersion(Long datasetId, MultipartFile file) {
         User user = SecurityUtil.getCurrentUser();
         Provider provider = providerService.findById(user.getId());
 
@@ -68,7 +68,7 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
 
         DatasetVersion datasetVersion = DatasetVersion.builder()
                 .dataset(dataset)
-                .version("v1.0") // TODO Sprint 2: auto increment version (v1.1, v1.2...)
+                .version("v1.0") // TODO next sprints: auto increment version (v1.1, v1.2...)
                 .status(DatasetVersionStatus.CREATED)
                 .generationType(DatasetGenerationType.PROVIDER)
                 .originFileName(fileName)
@@ -79,26 +79,16 @@ public class DatasetVersionServiceImpl implements DatasetVersionService{
 
         String objectKey = "datasets/" + dataset.getId()
                 + "/" + datasetVersion.getId()
-                + "/raw.csv"; // TODO Sprint 2: support multiple data artifacts per version
+                + "/raw.csv"; // TODO next sprints: support multiple data artifacts per version
         try {
             datasetVersion.setDataLocation(storageService.save(file, objectKey));
 
         } catch (IOException e) {
             throw  new CustomException(ErrorCode.COMMON_017);
         }
-        datasetVersionRepository.save(datasetVersion);
 
-        return VersionResponse.builder()
-                .id(datasetVersion.getId())
-                .datasetId(datasetVersion.getDataset().getId())
-                .version(datasetVersion.getVersion())
-                .status(datasetVersion.getStatus())
-                .generationType(datasetVersion.getGenerationType())
-                .dataLocation(datasetVersion.getDataLocation())
-                .checksum(datasetVersion.getChecksum())
-                .originFileName(datasetVersion.getOriginFileName())
-                .createdAt(datasetVersion.getCreatedAt())
-                .build();
+
+        return datasetVersionRepository.save(datasetVersion);
     }
 
     @Override

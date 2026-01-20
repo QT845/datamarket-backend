@@ -1,8 +1,6 @@
 package com.datamarket.backend.service.dataset;
 
 import com.datamarket.backend.dto.request.CreateDomainRequest;
-import com.datamarket.backend.dto.response.DomainResponse;
-import com.datamarket.backend.dto.response.DomainSummaryResponse;
 import com.datamarket.backend.entity.dataset.DatasetDomain;
 import com.datamarket.backend.exception.CustomException;
 import com.datamarket.backend.exception.ErrorCode;
@@ -23,30 +21,18 @@ public class DatasetDomainServiceImpl implements  DatasetDomainService {
     }
 
     @Override
-    public List<DomainSummaryResponse> getAllDomains() {
-        List<DatasetDomain> datasetDomain = datasetDomainRepository.findAll();
-        return datasetDomain.stream()
-                .map(domain -> DomainSummaryResponse.builder()
-                        .id(domain.getId())
-                        .name(domain.getName())
-                        .build())
-                .toList();
+    public List<DatasetDomain> getAllDomains() {
+        return datasetDomainRepository.findAll();
     }
 
     @Override
-    public DomainResponse createDomain(CreateDomainRequest request) {
+    public DatasetDomain createDomain(CreateDomainRequest request) {
 
         DatasetDomain datasetDomain = new DatasetDomain();
         datasetDomain.setCode(request.getCode());
         datasetDomain.setName(request.getName());
         datasetDomain.setDescription(request.getDescription());
-        datasetDomainRepository.save(datasetDomain);
 
-        return DomainResponse.builder()
-                .id(datasetDomain.getId())
-                .code(datasetDomain.getCode())
-                .name(datasetDomain.getName())
-                .description(datasetDomain.getDescription())
-                .build();
+        return datasetDomainRepository.save(datasetDomain);
     }
 }

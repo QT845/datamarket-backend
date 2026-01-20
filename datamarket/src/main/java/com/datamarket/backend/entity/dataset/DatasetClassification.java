@@ -23,7 +23,7 @@ public class DatasetClassification {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DatasetLevel dataLevel;
+    private DatasetLevel datasetLevel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "derived_from_version_id")

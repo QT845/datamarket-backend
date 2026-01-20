@@ -1,4 +1,4 @@
-package com.datamarket.backend.dto.response;
+package com.datamarket.backend.dto.response.datasetResponse;
 
 import com.datamarket.backend.enums.IntendedUse;
 import lombok.AllArgsConstructor;

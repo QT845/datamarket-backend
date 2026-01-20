@@ -53,7 +53,7 @@ public class DatasetClassificationServiceImpl implements  DatasetClassificationS
                                 .datasetVersion(version)
                                 .build());
 
-        classification.setDataLevel(request.getDatasetLevel());
+        classification.setDatasetLevel(request.getDatasetLevel());
 
         if (request.getDatasetLevel() == DatasetLevel.RAW) {
             classification.setDerivedFromVersion(null);

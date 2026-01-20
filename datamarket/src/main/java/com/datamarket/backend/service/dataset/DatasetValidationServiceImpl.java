@@ -1,6 +1,5 @@
 package com.datamarket.backend.service.dataset;
 
-import com.datamarket.backend.dto.response.DatasetQualityReportResponse;
 import com.datamarket.backend.entity.dataset.DatasetQualityReport;
 import com.datamarket.backend.entity.dataset.DatasetVersion;
 import com.datamarket.backend.enums.DatasetVersionStatus;
@@ -25,7 +24,7 @@ public class DatasetValidationServiceImpl implements DatasetValidationService{
     private final StorageService storageService;
 
     @Override
-    public DatasetQualityReportResponse validateDatasetVersion(Long versionId) {
+    public DatasetQualityReport validateDatasetVersion(Long versionId) {
         boolean passed = true;
         StringBuilder notes = new StringBuilder();
 
@@ -116,63 +115,19 @@ public class DatasetValidationServiceImpl implements DatasetValidationService{
                 .notes(notes.toString())
                 .status(status)
                 .build();
-        datasetQualityReportRepository.save(report);
 
-        return DatasetQualityReportResponse.builder()
-                .id(report.getId().toString())
-                .datasetId(datasetVersion.getDataset().getId())
-                .datasetName(datasetVersion.getDataset().getName())
-                .versionId(datasetVersion.getId())
-                .version(datasetVersion.getVersion())
-                .recordCount(report.getRecordCount())
-                .nullRate(report.getNullRate())
-                .duplicateRate(report.getDuplicateRate())
-                .formatValid(report.isFormatValid())
-                .notes(report.getNotes())
-                .reportCreatedAt(report.getCreatedAt())
-                .versionCreatedAt(datasetVersion.getCreatedAt())
-                .build();
+
+        return datasetQualityReportRepository.save(report);
     }
 
     @Override
-    public List<DatasetQualityReportResponse> getAll() {
-        List<DatasetQualityReport> reports = datasetQualityReportRepository.findByDatasetVersion_Status(DatasetVersionStatus.TECHNICAL_REVIEW);
-
-        return reports.stream()
-                .map(report -> DatasetQualityReportResponse.builder()
-                        .id(report.getId().toString())
-                        .datasetId(report.getDatasetVersion().getDataset().getId())
-                        .datasetName(report.getDatasetVersion().getDataset().getName())
-                        .versionId(report.getDatasetVersion().getId())
-                        .version(report.getDatasetVersion().getVersion())
-                        .recordCount(report.getRecordCount())
-                        .nullRate(report.getNullRate())
-                        .duplicateRate(report.getDuplicateRate())
-                        .formatValid(report.isFormatValid())
-                        .notes(report.getNotes())
-                        .reportCreatedAt(report.getCreatedAt())
-                        .versionCreatedAt(report.getDatasetVersion().getCreatedAt())
-                        .build())
-                .toList();
+    public List<DatasetQualityReport> getAll() {
+        return datasetQualityReportRepository.findByDatasetVersion_Status(DatasetVersionStatus.TECHNICAL_REVIEW);
     }
 
     @Override
-    public DatasetQualityReportResponse getById(Long id) {
-        DatasetQualityReport report = datasetQualityReportRepository.findById(id).orElseThrow(
+    public DatasetQualityReport getById(Long id) {
+        return datasetQualityReportRepository.findById(id).orElseThrow(
                 () -> new CustomException(ErrorCode.DATASET_025));
-        return DatasetQualityReportResponse.builder()
-                .id(report.getId().toString())
-                .datasetId(report.getDatasetVersion().getDataset().getId())
-                .datasetName(report.getDatasetVersion().getDataset().getName())
-                .versionId(report.getDatasetVersion().getId())
-                .version(report.getDatasetVersion().getVersion())
-                .recordCount(report.getRecordCount())
-                .nullRate(report.getNullRate())
-                .duplicateRate(report.getDuplicateRate())
-                .formatValid(report.isFormatValid())
-                .notes(report.getNotes())
-                .reportCreatedAt(report.getCreatedAt())
-                .versionCreatedAt(report.getDatasetVersion().getCreatedAt())
-                .build();
     }
 }
