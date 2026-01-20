@@ -3,16 +3,14 @@ package com.datamarket.backend.service.auth;
 import com.datamarket.backend.dto.request.LoginRequest;
 import com.datamarket.backend.dto.request.RegisterRequest;
 import com.datamarket.backend.dto.response.ApiResponse;
-import com.datamarket.backend.dto.response.AuthResponse;
-import com.datamarket.backend.dto.response.TokenResponse;
-import com.datamarket.backend.dto.response.UserResponse;
+import com.datamarket.backend.dto.response.authResponse.AuthResponse;
+import com.datamarket.backend.dto.response.authResponse.TokenResponse;
 import com.datamarket.backend.entity.RefreshToken;
 import com.datamarket.backend.entity.User;
 import com.datamarket.backend.enums.RoleType;
 import com.datamarket.backend.enums.UserStatus;
 import com.datamarket.backend.exception.CustomException;
 import com.datamarket.backend.exception.ErrorCode;
-import com.datamarket.backend.mapper.UserMapper;
 import com.datamarket.backend.security.jwt.JwtTokenProvider;
 import com.datamarket.backend.security.refresh.RefreshTokenService;
 import com.datamarket.backend.security.util.SecurityUtil;
@@ -20,8 +18,6 @@ import com.datamarket.backend.service.user.UserService;
 import com.datamarket.backend.utils.PasswordUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

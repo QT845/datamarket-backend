@@ -2,7 +2,7 @@ package com.datamarket.backend.service.dataset;
 
 import com.datamarket.backend.dto.request.CreateDatasetRequest;
 import com.datamarket.backend.dto.request.UpdateDatasetRequest;
-import com.datamarket.backend.dto.response.DatasetResponse;
+import com.datamarket.backend.dto.response.datasetResponse.DatasetResponse;
 import com.datamarket.backend.entity.Provider;
 import com.datamarket.backend.entity.User;
 import com.datamarket.backend.entity.dataset.Dataset;
@@ -15,8 +15,6 @@ import com.datamarket.backend.security.util.SecurityUtil;
 import com.datamarket.backend.service.provider.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,20 +40,20 @@ public class DatasetServiceImpl implements DatasetService {
                 .provider(provider)
                 .currentVersion(null)
                 .build();
-        datasetRepository.save(dataset);
 
-        return dataset;
+        return datasetRepository.save(dataset);
     }
 
     @Override
-    public DatasetResponse updateDataset(Long datasetId, UpdateDatasetRequest request) {
+    public Dataset updateDataset(Long datasetId, UpdateDatasetRequest request) {
         User user = SecurityUtil.getCurrentUser();
         Provider provider = providerService.findById(user.getId());
         if(!provider.getStatus().equals(ProviderStatus.APPROVED)) {
             throw new CustomException(ErrorCode.PROVIDER_003);
         }
 
-        Dataset dataset = datasetRepository.findById(datasetId).orElseThrow(() -> new CustomException(ErrorCode.DATASET_001));
+        Dataset dataset = datasetRepository.findById(datasetId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DATASET_001));
 
         if (!dataset.getProvider().getId().equals(provider.getId())) {
             throw new CustomException(ErrorCode.DATASET_007);
@@ -63,33 +61,15 @@ public class DatasetServiceImpl implements DatasetService {
 
         dataset.setName(request.getName());
         dataset.setDescription(request.getDescription());
-        datasetRepository.save(dataset);
 
-        return DatasetResponse.builder()
-                .id(dataset.getId())
-                .name(dataset.getName())
-                .description(dataset.getDescription())
-                .datasetStatus(dataset.getStatus())
-                .domain(dataset.getDomain().getName())
-                .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
-                .createdAt(dataset.getCreatedAt())
-                .build();
+
+        return datasetRepository.save(dataset);
     }
 
     @Override
-    public DatasetResponse getDataset(Long datasetId) {
-        Dataset dataset = datasetRepository.findById(datasetId)
+    public Dataset getDataset(Long datasetId) {
+        return datasetRepository.findById(datasetId)
                 .orElseThrow(() -> new CustomException(ErrorCode.DATASET_001));
-
-        return DatasetResponse.builder()
-                .id(dataset.getId())
-                .name(dataset.getName())
-                .description(dataset.getDescription())
-                .datasetStatus(dataset.getStatus())
-                .domain(dataset.getDomain().getName())
-                .currentVersion(dataset.getCurrentVersion() != null ? dataset.getCurrentVersion().getVersion() : null)
-                .createdAt(dataset.getCreatedAt())
-                .build();
     }
 
     @Override

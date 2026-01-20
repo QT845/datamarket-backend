@@ -1,4 +1,4 @@
-package com.datamarket.backend.dto.response;
+package com.datamarket.backend.dto.response.authResponse;
 
 import lombok.Builder;
 import lombok.Data;

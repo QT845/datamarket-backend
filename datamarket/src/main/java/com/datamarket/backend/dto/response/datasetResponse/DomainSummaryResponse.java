@@ -1,4 +1,4 @@
-package com.datamarket.backend.dto.response;
+package com.datamarket.backend.dto.response.datasetResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

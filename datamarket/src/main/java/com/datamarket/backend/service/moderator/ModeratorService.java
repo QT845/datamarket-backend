@@ -1,7 +1,5 @@
 package com.datamarket.backend.service.moderator;
 
-import com.datamarket.backend.dto.response.ApiResponse;
-import com.datamarket.backend.dto.response.DatasetQualityReportResponse;
 import com.datamarket.backend.dto.response.ModReviewResponse;
 
 public interface ModeratorService {

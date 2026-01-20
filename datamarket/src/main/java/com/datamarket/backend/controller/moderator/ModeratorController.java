@@ -1,8 +1,9 @@
 package com.datamarket.backend.controller.moderator;
 
 import com.datamarket.backend.dto.response.ApiResponse;
-import com.datamarket.backend.dto.response.DatasetQualityReportResponse;
+import com.datamarket.backend.dto.response.datasetResponse.DatasetQualityReportResponse;
 import com.datamarket.backend.dto.response.ModReviewResponse;
+import com.datamarket.backend.mapper.DatasetQualityReportMapper;
 import com.datamarket.backend.service.dataset.DatasetValidationService;
 import com.datamarket.backend.service.moderator.ModeratorService;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +18,31 @@ import java.util.List;
 public class ModeratorController {
     private final ModeratorService moderatorService;
     private final DatasetValidationService datasetValidationService;
+    private final DatasetQualityReportMapper datasetQualityReportMapper;
 
     @GetMapping("/dataset-quality-reports")
     public ResponseEntity<ApiResponse<List<DatasetQualityReportResponse>>> getAllDatasetQualityReports() {
-        List<DatasetQualityReportResponse> responses = datasetValidationService.getAll();
-        ApiResponse<List<DatasetQualityReportResponse>> apiResponse = new ApiResponse<>(true, "Dataset quality reports retrieved successfully", responses);
+        String message = "Dataset quality reports retrieved successfully";
+
+        List<DatasetQualityReportResponse> responses = datasetQualityReportMapper.toQualityReports(datasetValidationService.getAll());
+
+        if(responses.isEmpty()) {
+            message = "No dataset quality reports found";
+        }
+
+        ApiResponse<List<DatasetQualityReportResponse>> apiResponse = new ApiResponse<>(true, message, responses);
+
         return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/dataset-quality-reports/{id}")
     public ResponseEntity<ApiResponse<DatasetQualityReportResponse>> getDatasetQualityReport(@PathVariable Long id) {
-        DatasetQualityReportResponse response = datasetValidationService.getById(id);
+        DatasetQualityReportResponse response = datasetQualityReportMapper.toQualityReport(datasetValidationService.getById(id));
         ApiResponse<DatasetQualityReportResponse> apiResponse = new ApiResponse<>(true, "Dataset quality report retrieved successfully", response);
         return ResponseEntity.ok(apiResponse);
     }
 
+    // Fix to mapper later
     @PostMapping("/versions/{versionId}/approve")
     public ResponseEntity<ApiResponse<ModReviewResponse>> approveDataset(@PathVariable Long versionId) {
         ModReviewResponse response = moderatorService.approveDataset(versionId);
@@ -39,6 +50,7 @@ public class ModeratorController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    // Fix to mapper later
     @PostMapping("/versions/{versionId}/reject")
     public ResponseEntity<ApiResponse<ModReviewResponse>> rejectDataset(@PathVariable Long versionId) {
         ModReviewResponse response = moderatorService.rejectDataset(versionId, "Does not meet quality standards");

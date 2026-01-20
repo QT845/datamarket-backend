@@ -4,11 +4,8 @@ import com.datamarket.backend.dto.request.ClassificationRequest;
 import com.datamarket.backend.dto.request.CreateDatasetRequest;
 import com.datamarket.backend.dto.request.DeclarationRequest;
 import com.datamarket.backend.dto.response.*;
-import com.datamarket.backend.entity.dataset.BusinessSubmission;
-import com.datamarket.backend.mapper.BusinessSubmissionMapper;
-import com.datamarket.backend.mapper.DatasetClassificationMapper;
-import com.datamarket.backend.mapper.DatasetMapper;
-import com.datamarket.backend.mapper.ProviderDeclarationMapper;
+import com.datamarket.backend.dto.response.datasetResponse.*;
+import com.datamarket.backend.mapper.*;
 import com.datamarket.backend.service.dataset.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class ProviderController {
     private final DatasetClassificationService datasetClassificationService;
     private final BusinessSubmissionService businessSubmissionService;
     private final DatasetMapper datasetMapper;
+    private final DatasetVersionMapper datasetVersionMapper;
     private final ProviderDeclarationMapper providerDeclarationMapper;
     private final DatasetClassificationMapper datasetClassificationMapper;
     private final BusinessSubmissionMapper businessSubmissionMapper;
@@ -41,7 +39,7 @@ public class ProviderController {
     public ResponseEntity<ApiResponse<VersionResponse>> uploadDatasetVersion(
             @PathVariable Long datasetId,
             @RequestParam("file") MultipartFile file) {
-        VersionResponse response = datasetVersionService.createDatasetVersion(datasetId, file);
+        VersionResponse response = datasetVersionMapper.toVersionResponse(datasetVersionService.createDatasetVersion(datasetId, file));
         ApiResponse<VersionResponse> apiResponse = new ApiResponse<>(true, "Dataset version uploaded successfully", response);
         return ResponseEntity.ok(apiResponse);
     }

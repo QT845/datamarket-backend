@@ -53,7 +53,7 @@ public class BusinessSubmissionServiceImpl implements BusinessSubmissionService 
             throw new CustomException(ErrorCode.DATASET_064);
         }
 
-        if (classification.getDataLevel() != DatasetLevel.RAW
+        if (classification.getDatasetLevel() != DatasetLevel.RAW
                 && classification.getDerivedFromVersion() == null) {
 
             if (declaration.getMethodologyExplanation() == null

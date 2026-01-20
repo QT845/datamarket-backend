@@ -1,6 +1,6 @@
 package com.datamarket.backend.mapper;
 
-import com.datamarket.backend.dto.response.DatasetResponse;
+import com.datamarket.backend.dto.response.datasetResponse.DatasetResponse;
 import com.datamarket.backend.entity.dataset.Dataset;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,5 +11,7 @@ public interface DatasetMapper {
             source = "domain.name")
     @Mapping(target = "currentVersion",
             source = "currentVersion.version")
+    @Mapping(target = "datasetStatus",
+            source = "status")
     DatasetResponse toDatasetResponse(Dataset dataset);
 }

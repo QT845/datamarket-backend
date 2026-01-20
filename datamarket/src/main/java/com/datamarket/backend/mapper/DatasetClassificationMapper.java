@@ -1,6 +1,6 @@
 package com.datamarket.backend.mapper;
 
-import com.datamarket.backend.dto.response.ClassificationResponse;
+import com.datamarket.backend.dto.response.datasetResponse.ClassificationResponse;
 import com.datamarket.backend.entity.dataset.DatasetClassification;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
