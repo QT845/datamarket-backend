@@ -6,6 +6,7 @@ import com.datamarket.backend.dto.response.ApiResponse;
 import com.datamarket.backend.dto.response.AuthResponse;
 import com.datamarket.backend.dto.response.TokenResponse;
 import com.datamarket.backend.dto.response.UserResponse;
+import com.datamarket.backend.mapper.UserMapper;
 import com.datamarket.backend.service.auth.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,42 +22,61 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        ApiResponse<AuthResponse> result = authService.login(loginRequest);
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
+            @Valid @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response) {
+        AuthResponse result = authService.login(loginRequest);
 
-        AuthResponse authResponse = result.getData();
-
-        String refreshToken = authResponse.getRefreshToken();
+        String refreshToken = result.getRefreshToken();
 
         setRefreshCookie(response, refreshToken);
 
-        authResponse.setRefreshToken(null);
+        result.setRefreshToken(null);
 
-        return ResponseEntity.ok().body(result);
+        ApiResponse<AuthResponse> authResponse = ApiResponse.<AuthResponse>builder()
+                .success(true)
+                .data(result)
+                .message("Login successful")
+                .build();
+
+        return ResponseEntity.ok().body(authResponse);
     }
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
-        return ResponseEntity.ok().body(authService.register(registerRequest));
+        AuthResponse response  = authService.register(registerRequest);
+
+        ApiResponse<AuthResponse> apiResponse = ApiResponse.<AuthResponse>builder()
+                .success(true)
+                .data(response)
+                .message("Registration successful")
+                .build();
+
+        return ResponseEntity.ok().body(apiResponse);
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<TokenResponse>> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = extractRefreshToken(request);
         if (refreshToken != null) {
-            ApiResponse<TokenResponse> result =  authService.refreshToken(refreshToken);
+            TokenResponse result = authService.refreshToken(refreshToken);
 
-            TokenResponse tokenResponse = result.getData();
-
-            String newRefreshToken = tokenResponse.getRefreshToken();
+            String newRefreshToken = result.getRefreshToken();
 
             setRefreshCookie(response, newRefreshToken);
 
-            tokenResponse.setRefreshToken(null);
+            result.setRefreshToken(null);
 
-            return ResponseEntity.ok().body(result);
+            ApiResponse<TokenResponse> tokenResponse = ApiResponse.<TokenResponse>builder()
+                    .success(true)
+                    .message("Token refreshed successfully")
+                    .data(result)
+                    .build();
+
+            return ResponseEntity.ok().body(tokenResponse);
         } else {
             return ResponseEntity.status(401).body(ApiResponse.<TokenResponse>builder()
                     .success(false)
@@ -97,8 +117,15 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserResponse>> getMe() {
-        return ResponseEntity.ok().body(authService.getMe());
+        UserResponse userResponse = userMapper.toUserResponse(authService.getMe());
+        ApiResponse<UserResponse> apiResponse = ApiResponse.<UserResponse>builder()
+                .success(true)
+                .data(userResponse)
+                .message("User info retrieved successfully")
+                .build();
+        return ResponseEntity.ok().body(apiResponse);
     }
+
     private String extractRefreshToken(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
