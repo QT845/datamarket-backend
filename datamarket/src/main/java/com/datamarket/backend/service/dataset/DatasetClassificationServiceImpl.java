@@ -43,9 +43,10 @@ public class DatasetClassificationServiceImpl implements  DatasetClassificationS
             throw new CustomException(ErrorCode.DATASET_065);
         }
 
-        if (version.getStatus() != DatasetVersionStatus.APPROVED) {
-            throw new CustomException(ErrorCode.DATASET_030);
+        if (version.getStatus() != DatasetVersionStatus.TECHNICAL_APPROVED) {
+            throw new CustomException(ErrorCode.DATASET_031);
         }
+
 
         DatasetClassification classification =
                 datasetClassificationRepository.findByDatasetVersionId(versionId)
