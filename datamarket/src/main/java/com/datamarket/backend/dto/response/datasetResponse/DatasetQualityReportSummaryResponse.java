@@ -11,18 +11,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DatasetQualityReportResponse {
+public class DatasetQualityReportSummaryResponse {
     private Long id;
-    private Long datasetId;
     private String datasetName;
-    private Long versionId;
     private String version;
-    private Long recordCount;
-    private Double nullRate;
-    private Double duplicateRate;
-    private boolean formatValid;
-    private String notes;
     private LocalDateTime reportCreatedAt;
-    private LocalDateTime versionCreatedAt;
-
 }

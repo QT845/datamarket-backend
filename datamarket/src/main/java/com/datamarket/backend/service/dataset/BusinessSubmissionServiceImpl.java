@@ -6,6 +6,7 @@ import com.datamarket.backend.entity.dataset.BusinessSubmission;
 import com.datamarket.backend.entity.dataset.DatasetClassification;
 import com.datamarket.backend.entity.dataset.DatasetVersion;
 import com.datamarket.backend.entity.dataset.ProviderDeclaration;
+import com.datamarket.backend.enums.BusinessSubmissionStatus;
 import com.datamarket.backend.enums.DatasetLevel;
 import com.datamarket.backend.enums.DatasetVersionStatus;
 import com.datamarket.backend.enums.ProviderStatus;
@@ -16,6 +17,8 @@ import com.datamarket.backend.security.util.SecurityUtil;
 import com.datamarket.backend.service.provider.ProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +45,8 @@ public class BusinessSubmissionServiceImpl implements BusinessSubmissionService 
             throw new CustomException(ErrorCode.DATASET_007);
         }
 
-        if (version.getStatus() != DatasetVersionStatus.APPROVED) {
-            throw new CustomException(ErrorCode.DATASET_030);
+        if (version.getStatus() != DatasetVersionStatus.TECHNICAL_APPROVED) {
+            throw new CustomException(ErrorCode.DATASET_031);
         }
 
         DatasetClassification classification = datasetClassificationService.getByVersionId(versionId);
@@ -66,10 +69,23 @@ public class BusinessSubmissionServiceImpl implements BusinessSubmissionService 
                 BusinessSubmission.builder()
                         .datasetVersion(version)
                         .submittedBy(provider)
+                        .submissionStatus(BusinessSubmissionStatus.SUBMITTED)
                         .build()
         );
 
         version.setStatus(DatasetVersionStatus.BUSINESS_REVIEW);
+        datasetVersionService.save(version);
         return submission;
      }
+
+    @Override
+    public List<BusinessSubmission> getAll() {
+        return businessSubmissionRepository.findByDatasetVersion_Status(DatasetVersionStatus.BUSINESS_REVIEW);
+    }
+
+    @Override
+    public BusinessSubmission getById(Long id) {
+        return businessSubmissionRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.DATASET_067));
+    }
 }

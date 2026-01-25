@@ -22,12 +22,66 @@ public class ModeratorServiceImpl implements ModeratorService{
     private final DatasetService datasetService;
 
     @Override
-    public ModReviewResponse approveDataset(Long versionId) {
+    public ModReviewResponse approveTechnical(Long versionId) {
         DatasetVersion version = datasetVersionService.findById(versionId);
         Dataset dataset = version.getDataset();
 
         if(!version.getStatus().equals(DatasetVersionStatus.TECHNICAL_REVIEW)){
             throw new CustomException(ErrorCode.DATASET_023);
+        }
+
+        dataset.setStatus(DatasetStatus.PENDING);
+        datasetService.save(dataset);
+
+        version.setStatus(DatasetVersionStatus.TECHNICAL_APPROVED);
+        datasetVersionService.save(version);
+
+        return ModReviewResponse.builder()
+                .datasetId(dataset.getId())
+                .datasetName(dataset.getName())
+                .versionId(version.getId())
+                .version(version.getVersion())
+                .action("TECH_APPROVED")
+                .status(version.getStatus().name())
+                .message("Technical review approved")
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @Override
+    public ModReviewResponse rejectTechnical(Long versionId, String reason) {
+        DatasetVersion version = datasetVersionService.findById(versionId);
+        Dataset dataset = version.getDataset();
+
+        if(!version.getStatus().equals(DatasetVersionStatus.TECHNICAL_REVIEW)){
+            throw new CustomException(ErrorCode.DATASET_023);
+        }
+
+        version.setStatus(DatasetVersionStatus.REJECTED_MOD);
+        datasetVersionService.save(version);
+
+        dataset.setStatus(DatasetStatus.DRAFT);
+        datasetService.save(dataset);
+
+        return ModReviewResponse.builder()
+                .datasetId(dataset.getId())
+                .datasetName(dataset.getName())
+                .versionId(version.getId())
+                .version(version.getVersion())
+                .action("TECH_REJECTED")
+                .status(version.getStatus().name())
+                .message("Technical review rejected: " + reason)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @Override
+    public ModReviewResponse approveBusiness(Long versionId) {
+        DatasetVersion version = datasetVersionService.findById(versionId);
+        Dataset dataset = version.getDataset();
+
+        if(!version.getStatus().equals(DatasetVersionStatus.BUSINESS_REVIEW)){
+            throw new CustomException(ErrorCode.DATASET_066);
         }
 
         dataset.setCurrentVersion(version);
@@ -42,34 +96,36 @@ public class ModeratorServiceImpl implements ModeratorService{
                 .datasetName(dataset.getName())
                 .versionId(version.getId())
                 .version(version.getVersion())
-                .action("APPROVE")
-                .status("APPROVED")
-                .message("Dataset approved")
+                .action("BUSINESS_APPROVE")
+                .status(version.getStatus().name())
+                .message("Business review approved")
                 .timestamp(LocalDateTime.now())
                 .build();
     }
 
     @Override
-    public ModReviewResponse rejectDataset(Long versionId, String reason) {
+    public ModReviewResponse rejectBusiness(Long versionId, String reason) {
         DatasetVersion version = datasetVersionService.findById(versionId);
         Dataset dataset = version.getDataset();
 
-        if(!version.getStatus().equals(DatasetVersionStatus.TECHNICAL_REVIEW)){
-            throw new CustomException(ErrorCode.DATASET_023);
+        if(!version.getStatus().equals(DatasetVersionStatus.BUSINESS_REVIEW)){
+            throw new CustomException(ErrorCode.DATASET_066);
         }
 
         version.setStatus(DatasetVersionStatus.REJECTED_MOD);
         datasetVersionService.save(version);
+
+        dataset.setStatus(DatasetStatus.PENDING);
+        datasetService.save(dataset);
 
         return ModReviewResponse.builder()
                 .datasetId(dataset.getId())
                 .datasetName(dataset.getName())
                 .versionId(version.getId())
                 .version(version.getVersion())
-                .action("REJECTED")
-                .status("REJECTED")
-                .message("Dataset rejected: " + reason)
+                .action("BUSINESS_REJECTED")
+                .status(version.getStatus().name())
+                .message("Business review rejected: " + reason)
                 .timestamp(LocalDateTime.now())
-                .build();
-    }
+                .build();    }
 }

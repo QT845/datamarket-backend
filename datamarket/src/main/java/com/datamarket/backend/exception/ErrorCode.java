@@ -85,6 +85,7 @@ public enum ErrorCode {
     DATASET_028("DATASET_028", "Dataset version does not belong to dataset", HttpStatus.BAD_REQUEST),
     DATASET_029("DATASET_029", "Dataset version not approved", HttpStatus.BAD_REQUEST),
     DATASET_030("DATASET_030", "Dataset version is not approved", HttpStatus.BAD_REQUEST),
+    DATASET_031("DATASET_031", "Dataset version technical is not approved", HttpStatus.BAD_REQUEST),
 
 
     DATASET_040("DATASET_040", "Dataset upload failed", HttpStatus.BAD_REQUEST),
@@ -105,6 +106,8 @@ public enum ErrorCode {
     DATASET_063("DATASET_063", "Provider declaration is missing", HttpStatus.BAD_REQUEST),
     DATASET_064("DATASET_064", "Time range end must be larger thanh time range start", HttpStatus.BAD_REQUEST),
     DATASET_065("DATASET_065", "Dataset version is locked for business review and cannot be modified", HttpStatus.BAD_REQUEST),
+    DATASET_066("DATASET_066", "Dataset version is not in business review", HttpStatus.BAD_REQUEST),
+    DATASET_067("DATASET_067", "Submission review not found", HttpStatus.BAD_REQUEST),
     DATASET_070("DATASET_070", "Dataset classification not found", HttpStatus.NOT_FOUND),
     DATASET_080("DATASET_080", "Business metadata incomplete", HttpStatus.NOT_FOUND),
 

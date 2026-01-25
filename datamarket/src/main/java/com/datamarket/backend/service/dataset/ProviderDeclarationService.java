@@ -7,4 +7,5 @@ public interface ProviderDeclarationService {
     ProviderDeclaration declare(Long versionId, DeclarationRequest request);
     ProviderDeclaration findByVersionId(Long versionId);
     ProviderDeclaration getByVersionId(Long versionId);
+    ProviderDeclaration findByDatasetVersionId(Long versionId);
 }

@@ -43,8 +43,8 @@ public class ProviderDeclarationServiceImpl implements ProviderDeclarationServic
             throw new CustomException(ErrorCode.DATASET_065);
         }
 
-        if (version.getStatus() != DatasetVersionStatus.APPROVED) {
-            throw new CustomException(ErrorCode.DATASET_030);
+        if (version.getStatus() != DatasetVersionStatus.TECHNICAL_APPROVED) {
+            throw new CustomException(ErrorCode.DATASET_031);
         }
 
         if(request.getTimeRangeEnd().isBefore(request.getTimeRangeStart())){
@@ -82,5 +82,11 @@ public class ProviderDeclarationServiceImpl implements ProviderDeclarationServic
     public ProviderDeclaration getByVersionId(Long versionId) {
         return providerDeclarationRepository.findByDatasetVersionId(versionId)
                 .orElse(null);    }
+
+    @Override
+    public ProviderDeclaration findByDatasetVersionId(Long versionId) {
+        return providerDeclarationRepository.findByDatasetVersionId(versionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.DATASET_062));
+    }
 }
 

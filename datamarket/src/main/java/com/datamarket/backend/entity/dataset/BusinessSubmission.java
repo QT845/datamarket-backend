@@ -1,6 +1,7 @@
 package com.datamarket.backend.entity.dataset;
 
 import com.datamarket.backend.entity.Provider;
+import com.datamarket.backend.enums.BusinessSubmissionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,9 @@ public class BusinessSubmission {
     @JoinColumn(name = "submitted_by_provider_id", nullable = false)
     private Provider submittedBy;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private BusinessSubmissionStatus submissionStatus;
 
     @PrePersist
     public void prePersist() {
